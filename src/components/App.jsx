@@ -7,7 +7,6 @@ import Notification from './Notification/Notification'
 // style
 import { Container } from './App.styled'
 
-
 function App() {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
@@ -23,7 +22,7 @@ function App() {
         return;
       case 'bad':
         setBad(state => state + 1);
-       return;
+      return;
       
       default:
         return;
@@ -35,13 +34,11 @@ function App() {
     const positivePercentage = (good / total) * 100;
     return Math.round(positivePercentage)
   }
-    
   const countTotalFeedback = () => {
     return good + neutral + bad;
   }
 
   const variation = good > 0 || neutral > 0 || bad > 0;
-
     return (
       <Fragment>
         <Container>
