@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from "react";
+import React, { Fragment, useState} from "react";
 import Feedback from './Feedback/Feedback'
 import SectionTitle from './SectionTitle/SectionTitle'
 import Statistics from './Statistics/Statistics'
@@ -8,58 +8,62 @@ import Notification from './Notification/Notification'
 import { Container } from './App.styled'
 
 
-
-class App extends Component {
-state = {
-  good: 0,
-  neutral: 0,
-  bad: 0
-}
-  countPositiveFeedbackPercentage = () => {
-    const total = this.countTotalFeedback();
-    const good = this.state.good;
+function App() {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+  
+  const handleIncrement = name => {
+    switch (name) {
+      case 'good':
+        setGood(state => state + 1);
+        return;
+      case 'neutral':
+        setNeutral(state => state + 1);
+        return;
+      case 'bad':
+        setBad(state => state + 1);
+       return;
+      
+      default:
+        return;
+    }
+  }
+  
+  const countPositiveFeedbackPercentage = () => {
+    const total = countTotalFeedback();
     const positivePercentage = (good / total) * 100;
     return Math.round(positivePercentage)
   }
     
-  countTotalFeedback = () =>{
-    const { good, neutral, bad } = this.state;
+  const countTotalFeedback = () => {
     return good + neutral + bad;
   }
 
-  handleIncrement = event => {
-    this.setState(state => {
-      return { [event]: state[event] + 1 };
-    });
-    console.log(event);
-  }
-  
-  render() {
-    const { good, neutral, bad } = this.state;
-    const variation = good > 0 || bad > 0 || neutral > 0;
+  const variation = good > 0 || neutral > 0 || bad > 0;
+
     return (
       <Fragment>
         <Container>
         <SectionTitle title="Please leave Feedback">
         <Feedback 
-            options={this.state}
-            handleIncrement={this.handleIncrement}
+            options={{ good, neutral, bad }}
+            handleIncrement ={handleIncrement}
           />
         </SectionTitle>
         <SectionTitle title="Statictics">
-          {!variation ? <Notification message='No feedback given'></Notification> :  <Statistics
+          {!variation ?
+            <Notification message="There is no feedback" /> :
+            <Statistics
               good={good}
               neutral={neutral}
               bad={bad}
-            total={this.countTotalFeedback()}
-            positiveTotal={this.countPositiveFeedbackPercentage()} 
-        />}
+            total={countTotalFeedback()}
+            positiveTotal={countPositiveFeedbackPercentage()}              
+        />}              
           </SectionTitle>
           </Container>
-      </Fragment>
-      )
+    </Fragment>)
   }
-
-}
 
 export default App;
